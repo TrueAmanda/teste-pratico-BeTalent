@@ -1,0 +1,73 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: payment-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - payment-network
+    depends_on:
+      - mysql
+      - gateway1
+      - gateway2
+
+  nginx:
+    image: nginx:alpine
+    container_name: payment-nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - payment-network
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: payment-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: payment_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: secret
+      MYSQL_USER: payment_user
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - payment-network
+
+  gateway1:
+    image: matheusprotzen/gateways-mock
+    container_name: payment-gateway1
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    networks:
+      - payment-network
+
+  gateway2:
+    image: matheusprotzen/gateways-mock
+    container_name: payment-gateway2
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    networks:
+      - payment-network
+
+networks:
+  payment-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

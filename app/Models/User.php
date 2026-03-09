@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'ADMIN';
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === 'MANAGER' || $this->isAdmin();
+    }
+
+    public function isFinance(): bool
+    {
+        return $this->role === 'FINANCE' || $this->isAdmin();
+    }
+
+    public function canManageUsers(): bool
+    {
+        return $this->isAdmin();
+    }
+
+    public function canManageProducts(): bool
+    {
+        return $this->isManager() || $this->isFinance();
+    }
+
+    public function canManageGateways(): bool
+    {
+        return $this->isAdmin();
+    }
+
+    public function canRefund(): bool
+    {
+        return $this->isFinance() || $this->isAdmin();
+    }
+}
