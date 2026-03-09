@@ -15,7 +15,7 @@ API RESTful para gerenciamento de pagamentos multi-gateway construída com Larav
 1. **Clone o repositório**
    ```bash
    git clone <repository-url>
-   cd payment-gateway-api
+   cd teste-pratico-BeTalent
    ```
 
 2. **Inicie os containers**
@@ -23,26 +23,25 @@ API RESTful para gerenciamento de pagamentos multi-gateway construída com Larav
    docker-compose up -d
    ```
 
-3. **Instale as dependências**
-   ```bash
-   docker-compose exec app composer install
-   ```
-
-4. **Configure o ambiente**
+3. **Configure o ambiente**
    ```bash
    docker-compose exec app cp .env.example .env
    docker-compose exec app php artisan key:generate
    ```
 
-5. **Execute as migrations e seeders**
+4. **Execute as migrations e seeders**
    ```bash
-   docker-compose exec app php artisan migrate:fresh --seed
+   docker-compose exec app php artisan migrate:fresh --seed --force
    ```
 
-6. **Acesse a API**
+5. **Acesse a API**
    - API: http://localhost:8080
    - Gateway 1: http://localhost:3001
    - Gateway 2: http://localhost:3002
+
+### 📦 Postman Collection
+
+Importe o arquivo `postman-collection.json` no Postman para testar todas as funcionalidades da API com exemplos prontos para uso.
 
 ### Desenvolvimento Local
 
