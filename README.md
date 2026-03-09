@@ -261,11 +261,3 @@ A API responde com informações detalhadas sobre transações, incluindo:
 ## 📝 Licença
 
 MIT License - Veja o arquivo LICENSE para detalhes.
-
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma feature branch
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
